@@ -364,7 +364,7 @@ func (bs *Stream) AddressUDPAddr(addr *net.UDPAddr) error {
 }
 
 // PutAddressUDPAddr puts address from UDPAddr to Buffer
-func (bs *Stream) PutAddressUDPAddr(addr *net.UDPAddr) error {
+func (bs *Stream) PutAddressUDPAddr(addr net.UDPAddr) error {
 	var ver uint16
 	switch len(addr.IP) {
 	case net.IPv6len:
@@ -400,7 +400,7 @@ func (bs *Stream) AddressTCPAddr(addr *net.TCPAddr) error {
 }
 
 // PutAddressTCPAddr puts address from TCPAddr to Buffer
-func (bs *Stream) PutAddressTCPAddr(addr *net.TCPAddr) error {
+func (bs *Stream) PutAddressTCPAddr(addr net.TCPAddr) error {
 	var ver uint16
 	switch len(addr.IP) {
 	case net.IPv6len:
