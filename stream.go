@@ -12,6 +12,7 @@ package binary
 import (
 	"bytes"
 	"encoding/hex"
+	"net"
 	"strconv"
 	"strings"
 )
@@ -19,7 +20,21 @@ import (
 // NewStream returns new Stream
 func NewStream() *Stream {
 	return &Stream{
-		Buffer: &bytes.Buffer{},
+		Buffer: bytes.NewBuffer([]byte{}),
+	}
+}
+
+// NewStreamBytes returns new Stream from bytes
+func NewStreamBytes(b []byte) *Stream {
+	return &Stream{
+		Buffer: bytes.NewBuffer(b),
+	}
+}
+
+// NewStreamString returns new Stream from string
+func NewStreamString(s string) *Stream {
+	return &Stream{
+		Buffer: bytes.NewBufferString(s),
 	}
 }
 
@@ -202,6 +217,30 @@ func (bs *Stream) PutLong(value int64) error {
 	return Write(bs.Buffer, BigEndian, value)
 }
 
+// Bool sets byte got from buffer as bool to value
+func (bs *Stream) Bool(value *bool) error {
+	var val byte
+
+	err := bs.Byte(&val)
+	if err != nil {
+		return err
+	}
+
+	*value = (val != 0)
+
+	return nil
+}
+
+//PutBool puts bool as byte from value to buffer
+func (bs *Stream) PutBool(value bool) error {
+	var val byte
+	if value {
+		val = 1 // true
+	}
+
+	return bs.PutByte(val)
+}
+
 // String sets string(len short, str string) got from buffer to value
 func (bs *Stream) String(value *string) error {
 	var n uint16
@@ -300,4 +339,77 @@ func (bs *Stream) PutAddress(addr string, port, version uint16) error {
 	}
 
 	return nil
+}
+
+
+// AddressUDPAddr sets address got from Buffer to UDPAddr
+func (bs *Stream) AddressUDPAddr(addr *net.UDPAddr) error {
+	var add string
+	var port uint16
+
+	err := bs.Address(&add, &port)
+	if err != nil {
+		return err
+	}
+
+	naddr := net.UDPAddr{
+		IP:   net.ParseIP(add),
+		Port: int(port),
+		//Zone: "", // TODO: support ipv6
+	}
+
+	*addr = naddr
+
+	return nil
+}
+
+// PutAddressUDPAddr puts address from UDPAddr to Buffer
+func (bs *Stream) PutAddressUDPAddr(addr *net.UDPAddr) error {
+	var ver uint16
+	switch len(addr.IP) {
+	case net.IPv6len:
+		ver = 6
+	case net.IPv4len:
+		fallthrough
+	default:
+		ver = 4
+	}
+
+	return bs.PutAddress(addr.IP.String(), uint16(addr.Port), ver)
+}
+
+// AddressTCPAddr sets address got from Buffer to TCPAddr
+func (bs *Stream) AddressTCPAddr(addr *net.TCPAddr) error {
+	var add string
+	var port uint16
+
+	err := bs.Address(&add, &port)
+	if err != nil {
+		return err
+	}
+
+	naddr := net.TCPAddr{
+		IP:   net.ParseIP(add),
+		Port: int(port),
+		//Zone: "", // TODO: support ipv6
+	}
+
+	*addr = naddr
+
+	return nil
+}
+
+// PutAddressTCPAddr puts address from TCPAddr to Buffer
+func (bs *Stream) PutAddressTCPAddr(addr *net.TCPAddr) error {
+	var ver uint16
+	switch len(addr.IP) {
+	case net.IPv6len:
+		ver = 6
+	case net.IPv4len:
+		fallthrough
+	default:
+		ver = 4
+	}
+
+	return bs.PutAddress(addr.IP.String(), uint16(addr.Port), ver)
 }
