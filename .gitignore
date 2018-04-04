@@ -1,3 +1,7 @@
 #Igone files
 *_test.go
 *.test
+
+#For ctags
+.ctags
+.tags
