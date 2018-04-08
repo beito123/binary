@@ -9,65 +9,88 @@ package binary
  * http://opensource.org/licenses/mit-license.php
  */
 
-import (
-	"bytes"
-)
-
 // NewStream returns new Stream
 func NewStream() *Stream {
-	return &Stream{
-		Buffer: bytes.NewBuffer([]byte{}),
-	}
+	return NewStreamBytes([]byte{})
 }
 
 // NewStreamBytes returns new Stream from bytes
 func NewStreamBytes(b []byte) *Stream {
 	return &Stream{
-		Buffer: bytes.NewBuffer(b),
-	}
-}
-
-// NewStreamString returns new Stream from string
-func NewStreamString(s string) *Stream {
-	return &Stream{
-		Buffer: bytes.NewBufferString(s),
+		buf: b,
+		correct: true,
 	}
 }
 
 // Stream is basic binary stream.
 type Stream struct {
-	Buffer *bytes.Buffer
+	buf     []byte
+	off     int
+	correct bool
 }
 
 // Reset resets Buffer
 func (bs *Stream) Reset() error {
-	bs.Buffer.Reset()
+	bs.correct = true
+	bs.buf = []byte{}
+
 	return nil
+}
+
+// Off returns offset
+func (bs *Stream) Off() int {
+	return bs.off
 }
 
 // Get returns n bytes from Buffer with []byte
 func (bs *Stream) Get(n int) []byte {
-	return bs.Buffer.Next(n)
+	off := bs.off
+	if (n + off) >= bs.Len() {
+		n = bs.Len()
+	}
+
+	bs.off += n
+
+	return bs.buf[off:off+n]
 }
 
 // Put puts value to buffer
 func (bs *Stream) Put(value []byte) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // Bytes returns the bytes left from Buffer.
 func (bs *Stream) Bytes() []byte {
-	return bs.Buffer.Bytes()
+	return bs.buf[bs.off:]
+}
+
+// AllBytes return all bytes
+func (bs *Stream) AllBytes() []byte {
+	return bs.buf
 }
 
 // Len returns len the bytes left
 func (bs *Stream) Len() int {
-	return bs.Buffer.Len()
+	return len(bs.buf[bs.off:])
 }
 
 // Skip skips n bytes on buffer
 func (bs *Stream) Skip(n int) {
-	_ = bs.Buffer.Next(n)
+	if (n + bs.off) >= bs.Len() {
+		n = bs.Len()
+	}
+
+	bs.off += n
+}
+
+func (bs *Stream) Read(p []byte) (n int, err error) {
+	return copy(p, bs.Get(len(p))), nil
+}
+
+func (bs *Stream) Write(p []byte) (n int, err error) {
+	bs.buf = append(bs.buf, p...)
+
+	return len(p), nil
 }
 
 /*
@@ -115,102 +138,82 @@ func (bs *Stream) Skip(n int) {
 
 // Byte sets byte(unsign) got from buffer to value
 func (bs *Stream) Byte(value *byte) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // SByte sets byte(sign) got from buffer to value
 func (bs *Stream) SByte(value *int8) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // PutByte puts byte(unsign) from value to buffer
 func (bs *Stream) PutByte(value byte) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // PutSByte puts byte(sign) from value to buffer
 func (bs *Stream) PutSByte(value int8) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // Short sets short(unsign) got from buffer to value
 func (bs *Stream) Short(value *uint16) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // SShort sets short(sign) got from buffer to value
 func (bs *Stream) SShort(value *int16) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // LShort sets short(unsign) got from buffer as LittleEndian to value
 func (bs *Stream) LShort(value *uint16) error {
-	return Read(bs.Buffer, LittleEndian, value)
+	return Read(bs, LittleEndian, value)
 }
 
 // LSShort sets short(sign) got from buffer as LittleEndian to value
 func (bs *Stream) LSShort(value *int16) error {
-	return Read(bs.Buffer, LittleEndian, value)
+	return Read(bs, LittleEndian, value)
 }
 
 // PutShort puts short(unsign) from value to buffer
 func (bs *Stream) PutShort(value uint16) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // PutSShort puts short(sign) from value to buffer
 func (bs *Stream) PutSShort(value int16) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // PutLShort puts short(unsign) from value to buffer as LittleEndian
 func (bs *Stream) PutLShort(value uint16) error {
-	return Write(bs.Buffer, LittleEndian, value)
+	return Write(bs, LittleEndian, value)
 }
 
 // PutLSShort puts short(sign) from value to buffer as LittleEndian
 func (bs *Stream) PutLSShort(value int16) error {
-	return Write(bs.Buffer, LittleEndian, value)
-}
-
-// Triad sets triad got from buffer to value
-func (bs *Stream) Triad(value *Triad) error {
-	return Read(bs.Buffer, BigEndian, value)
-}
-
-// PutTriad puts triad from value to buffer
-func (bs *Stream) PutTriad(value Triad) error {
-	return Write(bs.Buffer, BigEndian, value)
-}
-
-// LTriad sets triad got from buffer as LittleEndian to value
-func (bs *Stream) LTriad(value *Triad) error {
-	return Read(bs.Buffer, LittleEndian, value)
-}
-
-// PutLTriad puts triad from value to buffer as LittleEndian
-func (bs *Stream) PutLTriad(value Triad) error {
-	return Write(bs.Buffer, LittleEndian, value)
+	return Write(bs, LittleEndian, value)
 }
 
 // Int sets int got from buffer to value
 func (bs *Stream) Int(value *int32) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // PutInt puts int from value to buffer
 func (bs *Stream) PutInt(value int32) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // Long sets long got from buffer to value
 func (bs *Stream) Long(value *int64) error {
-	return Read(bs.Buffer, BigEndian, value)
+	return Read(bs, BigEndian, value)
 }
 
 // PutLong puts long from value to buffer
 func (bs *Stream) PutLong(value int64) error {
-	return Write(bs.Buffer, BigEndian, value)
+	return Write(bs, BigEndian, value)
 }
 
 // Bool sets byte got from buffer as bool to value

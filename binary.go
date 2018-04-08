@@ -16,25 +16,22 @@ import (
 )
 
 const (
-	// ByteSize is bytes size of Byte
+	// ByteSize is byte size of Byte
 	ByteSize = 1
 
-	// ShortSize is bytes size of Short
+	// ShortSize is byte size of Short
 	ShortSize = 2
 
-	// TriadSize is bytes size of Triad
-	TriadSize = 3
-
-	// IntSize is bytes size of Int
+	// IntSize is byte size of Int
 	IntSize = 4
 
-	// LongSize is bytes size of Long
+	// LongSize is byte size of Long
 	LongSize = 8
 
-	// FloatSize is bytes size of Float
+	// FloatSize is byte size of Float
 	FloatSize = 4
 
-	// DoubleSize is bytes size of Double
+	// DoubleSize is byte size of Double
 	DoubleSize = 8
 )
 
@@ -115,30 +112,6 @@ func WriteLUShort(v uint16) []byte {
 	return []byte{
 		byte(v),
 		byte(v >> 8),
-	}
-}
-
-func ReadTriad(v []byte) Triad {
-	return Triad(v[0])<<16 | Triad(v[1])<<8 | Triad(v[2])
-}
-
-func WriteTriad(v Triad) []byte {
-	return []byte{
-		byte(v >> 16),
-		byte(v >> 8),
-		byte(v),
-	}
-}
-
-func ReadLTriad(v []byte) Triad {
-	return Triad(v[0]) | Triad(v[1])<<8 | Triad(v[2])<<16
-}
-
-func WriteLTriad(v Triad) []byte {
-	return []byte{
-		byte(v),
-		byte(v >> 8),
-		byte(v >> 16),
 	}
 }
 
@@ -324,8 +297,6 @@ func Read(reader io.Reader, order Order, data interface{}) error {
 		*value = order.Short(bytes)
 	case *uint16:
 		*value = order.UShort(bytes)
-	case *Triad:
-		*value = order.Triad(bytes)
 	case *int32:
 		*value = order.Int(bytes)
 	case *uint32:
@@ -363,10 +334,6 @@ func Write(writer io.Writer, order Order, data interface{}) error {
 		value = order.PutUShort(v)
 	case *uint16:
 		value = order.PutUShort(*v)
-	case Triad:
-		value = order.PutTriad(v)
-	case *Triad:
-		value = order.PutTriad(*v)
 	case int32:
 		value = order.PutInt(v)
 	case *int32:
@@ -392,14 +359,12 @@ func Write(writer io.Writer, order Order, data interface{}) error {
 
 // dataSize returns byte size of type
 func dataSize(data interface{}) int {
-	size := 0
+	var size int
 	switch data.(type) {
 	case int8, *int8, uint8, *uint8:
 		size = ByteSize
 	case int16, *int16, uint16, *uint16:
 		size = ShortSize
-	case Triad, *Triad:
-		size = TriadSize
 	case int32, *int32, uint32, *uint32:
 		size = IntSize
 	case int64, *int64, uint64, *uint64:
@@ -409,6 +374,7 @@ func dataSize(data interface{}) int {
 	case float64, *float64:
 		size = DoubleSize
 	}
+
 	return size
 }
 
@@ -418,7 +384,6 @@ type Order interface {
 	SByte(v []byte) int8
 	Short(v []byte) int16
 	UShort(v []byte) uint16
-	Triad(v []byte) Triad
 	Int(v []byte) int32
 	UInt(v []byte) uint32
 	Long(v []byte) int64
@@ -429,7 +394,6 @@ type Order interface {
 	PutSByte(v int8) []byte
 	PutShort(v int16) []byte
 	PutUShort(v uint16) []byte
-	PutTriad(v Triad) []byte
 	PutInt(v int32) []byte
 	PutUInt(v uint32) []byte
 	PutLong(v int64) []byte
@@ -477,14 +441,6 @@ func (bigEndian) UShort(v []byte) uint16 {
 
 func (bigEndian) PutUShort(v uint16) []byte {
 	return WriteUShort(v)
-}
-
-func (bigEndian) Triad(v []byte) Triad {
-	return ReadTriad(v)
-}
-
-func (bigEndian) PutTriad(v Triad) []byte {
-	return WriteTriad(v)
 }
 
 func (bigEndian) Int(v []byte) int32 {
@@ -568,14 +524,6 @@ func (littleEndian) UShort(v []byte) uint16 {
 
 func (littleEndian) PutUShort(v uint16) []byte {
 	return WriteLUShort(v)
-}
-
-func (littleEndian) Triad(v []byte) Triad {
-	return ReadLTriad(v)
-}
-
-func (littleEndian) PutTriad(v Triad) []byte {
-	return WriteLTriad(v)
 }
 
 func (littleEndian) Int(v []byte) int32 {
