@@ -17,7 +17,7 @@ func NewStream() *Stream {
 // NewStreamBytes returns new Stream from bytes
 func NewStreamBytes(b []byte) *Stream {
 	return &Stream{
-		buf: b,
+		buf:     b,
 		correct: true,
 	}
 }
@@ -51,7 +51,7 @@ func (bs *Stream) Get(n int) []byte {
 
 	bs.off += n
 
-	return bs.buf[off:off+n]
+	return bs.buf[off : off+n]
 }
 
 // Put puts value to buffer
@@ -83,10 +83,17 @@ func (bs *Stream) Skip(n int) {
 	bs.off += n
 }
 
+//Pad puts empty bytes (0x00) of le (lenght).
+func (bs *Stream) Pad(le int) error {
+	return bs.Put(make([]byte, le))
+}
+
+// Read reads and sets p
 func (bs *Stream) Read(p []byte) (n int, err error) {
 	return copy(p, bs.Get(len(p))), nil
 }
 
+// Write writes p
 func (bs *Stream) Write(p []byte) (n int, err error) {
 	bs.buf = append(bs.buf, p...)
 
