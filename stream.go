@@ -83,7 +83,7 @@ func (bs *Stream) Skip(n int) {
 	bs.off += n
 }
 
-//Pad puts empty bytes (0x00) of le (lenght).
+//Pad puts empty bytes (0x00) of le (len).
 func (bs *Stream) Pad(le int) error {
 	return bs.Put(make([]byte, le))
 }
