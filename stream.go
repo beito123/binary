@@ -30,11 +30,10 @@ type Stream struct {
 }
 
 // Reset resets Buffer
-func (bs *Stream) Reset() error {
+func (bs *Stream) Reset() {
 	bs.correct = true
+	bs.off = 0
 	bs.buf = []byte{}
-
-	return nil
 }
 
 // Off returns offset
@@ -67,6 +66,13 @@ func (bs *Stream) Bytes() []byte {
 // AllBytes return all bytes
 func (bs *Stream) AllBytes() []byte {
 	return bs.buf
+}
+
+// SetBytes sets bytes
+func (bs *Stream) SetBytes(b []byte) {
+	bs.Reset()
+
+	bs.buf = b
 }
 
 // Len returns len the bytes left
