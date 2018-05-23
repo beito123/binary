@@ -55,7 +55,9 @@ func (bs *Stream) Get(n int) []byte {
 
 // Put puts value to buffer
 func (bs *Stream) Put(value []byte) error {
-	return Write(bs, BigEndian, value)
+	_, err := bs.Write(value)
+
+	return err
 }
 
 // Bytes returns the bytes left from Buffer.
