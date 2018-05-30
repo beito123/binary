@@ -261,6 +261,150 @@ func WriteLDouble(v float64) []byte {
 	return WriteULong(math.Float64bits(v))
 }
 
+func ReadEByte(v []byte) (byte, error) {
+	if len(v) < ByteSize {
+		return 0, nil
+	}
+
+	return ReadByte(v), nil
+}
+
+func ReadESByte(v []byte) (int8, error) {
+	if len(v) < ByteSize {
+		return 0, nil
+	}
+
+	return ReadSByte(v), nil
+}
+
+func ReadEShort(v []byte) (int16, error) {
+	if len(v) < ShortSize {
+		return 0, nil
+	}
+
+	return ReadShort(v), nil
+}
+
+func ReadELShort(v []byte) (int16, error) {
+	if len(v) < ShortSize {
+		return 0, nil
+	}
+
+	return ReadLShort(v), nil
+}
+
+func ReadEUShort(v []byte) (uint16, error) {
+	if len(v) < ShortSize {
+		return 0, nil
+	}
+
+	return ReadUShort(v), nil
+}
+
+func ReadELUShort(v []byte) (uint16, error) {
+	if len(v) < ShortSize {
+		return 0, nil
+	}
+
+	return ReadLUShort(v), nil
+}
+
+func ReadEInt(v []byte) (int32, error) {
+	if len(v) < IntSize {
+		return 0, nil
+	}
+
+	return ReadInt(v), nil
+}
+
+func ReadEUInt(v []byte) (uint32, error) {
+	if len(v) < IntSize {
+		return 0, nil
+	}
+
+	return ReadUInt(v), nil
+}
+
+func ReadELInt(v []byte) (int32, error) {
+	if len(v) < IntSize {
+		return 0, nil
+	}
+
+	return ReadLInt(v), nil
+}
+
+func ReadELUInt(v []byte) (uint32, error) {
+	if len(v) < IntSize {
+		return 0, nil
+	}
+
+	return ReadLUInt(v), nil
+}
+
+func ReadELong(v []byte) (int64, error) {
+	if len(v) < LongSize {
+		return 0, nil
+	}
+
+	return ReadLong(v), nil
+}
+
+func ReadEULong(v []byte) (uint64, error) {
+	if len(v) < LongSize {
+		return 0, nil
+	}
+
+	return ReadULong(v), nil
+}
+
+func ReadELLong(v []byte) (int64, error) {
+	if len(v) < LongSize {
+		return 0, nil
+	}
+
+	return ReadLLong(v), nil
+}
+
+func ReadELULong(v []byte) (uint64, error) {
+	if len(v) < LongSize {
+		return 0, nil
+	}
+
+	return ReadLULong(v), nil
+}
+
+func ReadEFloat(v []byte) (float32, error) { //TODO: umm... right method ?
+	if len(v) < FloatSize {
+		return 0, nil
+	}
+
+	return math.Float32frombits(ReadUInt(v)), nil
+}
+
+func ReadELFloat(v []byte) (float32, error) {
+	if len(v) < FloatSize {
+		return 0, nil
+	}
+
+	return ReadLFloat(v), nil
+}
+
+func ReadEDouble(v []byte) (float64, error) {
+	if len(v) < DoubleSize {
+		return 0, nil
+	}
+
+	return ReadDouble(v), nil
+}
+
+func ReadELDouble(v []byte) (float64, error) {
+	if len(v) < DoubleSize {
+		return 0, nil
+	}
+
+	return ReadLDouble(v), nil
+}
+
 // buf
 
 // Read reads data into b by order
