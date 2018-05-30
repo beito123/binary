@@ -35,16 +35,6 @@ const (
 	DoubleSize = 8
 )
 
-// Triad is using special value in Raknet
-type Triad uint32
-
-/*
-
-// MaxTriadSize max size of the Triad. range: 0 - 16777215 (2^24 = 16777216)
-const MaxTriadSize int = 0xffffff
-
-*/
-
 var ErrNotEnought = errors.New("binary: not enough")
 
 // TODO: adds comments
