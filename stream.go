@@ -1,5 +1,7 @@
 package binary
 
+import "errors"
+
 /*
  * Binary
  *
@@ -8,6 +10,8 @@ package binary
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
+
+var errNoEnough = errors.New("no enough buffer")
 
 // NewStream returns new Stream
 func NewStream() *Stream {
@@ -152,13 +156,13 @@ func (bs *Stream) Write(p []byte) (n int, err error) {
  */
 
 // Byte sets byte(unsign) got from buffer to value
-func (bs *Stream) Byte(value *byte) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) Byte() (byte, error) {
+	return ReadEByte(bs.Get(ByteSize))
 }
 
 // SByte sets byte(sign) got from buffer to value
-func (bs *Stream) SByte(value *int8) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) SByte() (int8, error) {
+	return ReadESByte(bs.Get(ByteSize))
 }
 
 // PutByte puts byte(unsign) from value to buffer
@@ -172,23 +176,23 @@ func (bs *Stream) PutSByte(value int8) error {
 }
 
 // Short sets short(unsign) got from buffer to value
-func (bs *Stream) Short(value *uint16) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) Short() (uint16, error) {
+	return ReadEUShort(bs.Get(ShortSize))
 }
 
 // SShort sets short(sign) got from buffer to value
-func (bs *Stream) SShort(value *int16) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) SShort() (int16, error) {
+	return ReadEShort(bs.Get(ShortSize))
 }
 
 // LShort sets short(unsign) got from buffer as LittleEndian to value
-func (bs *Stream) LShort(value *uint16) error {
-	return Read(bs, LittleEndian, value)
+func (bs *Stream) LShort() (uint16, error) {
+	return ReadELUShort(bs.Get(ShortSize))
 }
 
 // LSShort sets short(sign) got from buffer as LittleEndian to value
-func (bs *Stream) LSShort(value *int16) error {
-	return Read(bs, LittleEndian, value)
+func (bs *Stream) LSShort() (int16, error) {
+	return ReadELShort(bs.Get(ShortSize))
 }
 
 // PutShort puts short(unsign) from value to buffer
@@ -212,8 +216,8 @@ func (bs *Stream) PutLSShort(value int16) error {
 }
 
 // Int sets int got from buffer to value
-func (bs *Stream) Int(value *int32) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) Int() (int32, error) {
+	return ReadEInt(bs.Get(IntSize))
 }
 
 // PutInt puts int from value to buffer
@@ -222,8 +226,8 @@ func (bs *Stream) PutInt(value int32) error {
 }
 
 // Long sets long got from buffer to value
-func (bs *Stream) Long(value *int64) error {
-	return Read(bs, BigEndian, value)
+func (bs *Stream) Long() (int64, error) {
+	return ReadELong(bs.Get(LongSize))
 }
 
 // PutLong puts long from value to buffer
@@ -232,17 +236,13 @@ func (bs *Stream) PutLong(value int64) error {
 }
 
 // Bool sets byte got from buffer as bool to value
-func (bs *Stream) Bool(value *bool) error {
-	var val byte
-
-	err := bs.Byte(&val)
+func (bs *Stream) Bool() (bool, error) {
+	val, err := bs.Byte()
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	*value = (val != 0)
-
-	return nil
+	return val != 0, nil
 }
 
 //PutBool puts bool as byte from value to buffer
