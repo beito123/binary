@@ -35,7 +35,7 @@ const (
 	DoubleSize = 8
 )
 
-var ErrNotEnought = errors.New("binary: not enough")
+var ErrNotEnought = errors.New("binary: not enough bytes")
 
 // TODO: adds comments
 
@@ -263,7 +263,7 @@ func WriteLDouble(v float64) []byte {
 
 func ReadEByte(v []byte) (byte, error) {
 	if len(v) < ByteSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadByte(v), nil
@@ -271,7 +271,7 @@ func ReadEByte(v []byte) (byte, error) {
 
 func ReadESByte(v []byte) (int8, error) {
 	if len(v) < ByteSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadSByte(v), nil
@@ -279,7 +279,7 @@ func ReadESByte(v []byte) (int8, error) {
 
 func ReadEShort(v []byte) (int16, error) {
 	if len(v) < ShortSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadShort(v), nil
@@ -287,7 +287,7 @@ func ReadEShort(v []byte) (int16, error) {
 
 func ReadELShort(v []byte) (int16, error) {
 	if len(v) < ShortSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLShort(v), nil
@@ -295,7 +295,7 @@ func ReadELShort(v []byte) (int16, error) {
 
 func ReadEUShort(v []byte) (uint16, error) {
 	if len(v) < ShortSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadUShort(v), nil
@@ -303,7 +303,7 @@ func ReadEUShort(v []byte) (uint16, error) {
 
 func ReadELUShort(v []byte) (uint16, error) {
 	if len(v) < ShortSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLUShort(v), nil
@@ -311,7 +311,7 @@ func ReadELUShort(v []byte) (uint16, error) {
 
 func ReadEInt(v []byte) (int32, error) {
 	if len(v) < IntSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadInt(v), nil
@@ -319,7 +319,7 @@ func ReadEInt(v []byte) (int32, error) {
 
 func ReadEUInt(v []byte) (uint32, error) {
 	if len(v) < IntSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadUInt(v), nil
@@ -327,7 +327,7 @@ func ReadEUInt(v []byte) (uint32, error) {
 
 func ReadELInt(v []byte) (int32, error) {
 	if len(v) < IntSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLInt(v), nil
@@ -335,7 +335,7 @@ func ReadELInt(v []byte) (int32, error) {
 
 func ReadELUInt(v []byte) (uint32, error) {
 	if len(v) < IntSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLUInt(v), nil
@@ -343,7 +343,7 @@ func ReadELUInt(v []byte) (uint32, error) {
 
 func ReadELong(v []byte) (int64, error) {
 	if len(v) < LongSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLong(v), nil
@@ -351,7 +351,7 @@ func ReadELong(v []byte) (int64, error) {
 
 func ReadEULong(v []byte) (uint64, error) {
 	if len(v) < LongSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadULong(v), nil
@@ -359,7 +359,7 @@ func ReadEULong(v []byte) (uint64, error) {
 
 func ReadELLong(v []byte) (int64, error) {
 	if len(v) < LongSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLLong(v), nil
@@ -367,15 +367,15 @@ func ReadELLong(v []byte) (int64, error) {
 
 func ReadELULong(v []byte) (uint64, error) {
 	if len(v) < LongSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLULong(v), nil
 }
 
-func ReadEFloat(v []byte) (float32, error) { //TODO: umm... right method ?
+func ReadEFloat(v []byte) (float32, error) {
 	if len(v) < FloatSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return math.Float32frombits(ReadUInt(v)), nil
@@ -383,7 +383,7 @@ func ReadEFloat(v []byte) (float32, error) { //TODO: umm... right method ?
 
 func ReadELFloat(v []byte) (float32, error) {
 	if len(v) < FloatSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLFloat(v), nil
@@ -391,7 +391,7 @@ func ReadELFloat(v []byte) (float32, error) {
 
 func ReadEDouble(v []byte) (float64, error) {
 	if len(v) < DoubleSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadDouble(v), nil
@@ -399,7 +399,7 @@ func ReadEDouble(v []byte) (float64, error) {
 
 func ReadELDouble(v []byte) (float64, error) {
 	if len(v) < DoubleSize {
-		return 0, nil
+		return 0, ErrNotEnought
 	}
 
 	return ReadLDouble(v), nil
@@ -512,7 +512,7 @@ func dataSize(data interface{}) int {
 	return size
 }
 
-// Order for Raknet Protocol
+// Order is a byte order interface
 type Order interface {
 	Byte(v []byte) byte
 	SByte(v []byte) int8
