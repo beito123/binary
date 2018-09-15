@@ -484,6 +484,14 @@ func Write(writer io.Writer, order Order, data interface{}) error {
 		value = order.PutULong(v)
 	case *uint64:
 		value = order.PutULong(*v)
+	case float32:
+		value = order.PutFloat(v)
+	case *float32:
+		value = order.PutFloat(*v)
+	case float64:
+		value = order.PutDouble(v)
+	case *float64:
+		value = order.PutDouble(*v)
 	}
 
 	_, err := writer.Write(value)

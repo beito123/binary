@@ -235,6 +235,26 @@ func (bs *Stream) PutLong(value int64) error {
 	return Write(bs, BigEndian, value)
 }
 
+// Float sets long got from buffer to value
+func (bs *Stream) Float() (float32, error) {
+	return ReadEFloat(bs.Get(LongSize))
+}
+
+// PutFloat puts long from value to buffer
+func (bs *Stream) PutFloat(value float32) error {
+	return Write(bs, BigEndian, value)
+}
+
+// Double sets long got from buffer to value
+func (bs *Stream) Double() (float64, error) {
+	return ReadEDouble(bs.Get(LongSize))
+}
+
+// PutFloat puts long from value to buffer
+func (bs *Stream) PutDouble(value float64) error {
+	return Write(bs, BigEndian, value)
+}
+
 // Bool sets byte got from buffer as bool to value
 func (bs *Stream) Bool() (bool, error) {
 	val, err := bs.Byte()
