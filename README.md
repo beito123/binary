@@ -1,6 +1,6 @@
 # Binary
 
-This is binary library for Medaka written in Go.
+This is a simple binary library written in Go.
 
 ## License
 These codes are under the MIT License.
