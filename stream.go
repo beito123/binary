@@ -121,38 +121,13 @@ func (bs *Stream) Write(p []byte) (n int, err error) {
  *  SShort  2bytes  Big                   -32768 - 32767
  *  LShort  2bytes  Little                     0 - 65535
  *  LSShort 2bytes  Little                -32768 - 32767
- *  Triad   3bytes  Little                     0 - 16777215
  *  Int     4bytes  Big              -2147483648 - 2147483647
  *  Long    8bytes  Big     -9223372036854775808 - 9223372036854775807
  *  String  ?bytes  Big                        ? - ?
- */
-
-/*
- * Byte
- * SignedByte
- * Short
- * SignedShort
- * LShort
- * SignedLShort
- * Triad
- * LTriad
- * Int
- * Float
- * LFloat
- * Double
- * LDouble
- * Long
- * /////////////
- * Bool
- * String
- * HexString
- * Address
- * NBT
- * Item
- * UUID
- * Position
- * BlockPosition
- * EntityMetadata
+ *  Float   4bytes  Big        IEEE-754 32bits floating-point numbers
+ *  LFloat  4bytes  Little     IEEE-754 64bits floating-point numbers
+ *  Double  8bytes  Big        IEEE-754 64bits floating-point numbers
+ *  LDouble 8bytes  Little     IEEE-754 64bits floating-point numbers
  */
 
 // Byte sets byte(unsign) got from buffer to value
@@ -225,6 +200,16 @@ func (bs *Stream) PutInt(value int32) error {
 	return Write(bs, BigEndian, value)
 }
 
+// Int sets int got from buffer to value as LittleEndian
+func (bs *Stream) LInt() (int32, error) {
+	return ReadELInt(bs.Get(IntSize))
+}
+
+// PutInt puts int from value to buffer as LittleEndian
+func (bs *Stream) PutLInt(value int32) error {
+	return Write(bs, LittleEndian, value)
+}
+
 // Long sets long got from buffer to value
 func (bs *Stream) Long() (int64, error) {
 	return ReadELong(bs.Get(LongSize))
@@ -233,6 +218,16 @@ func (bs *Stream) Long() (int64, error) {
 // PutLong puts long from value to buffer
 func (bs *Stream) PutLong(value int64) error {
 	return Write(bs, BigEndian, value)
+}
+
+// Long sets long got from buffer to value as LittleEndian
+func (bs *Stream) LLong() (int64, error) {
+	return ReadELLong(bs.Get(LongSize))
+}
+
+// PutLong puts long from value to buffer as LittleEndian
+func (bs *Stream) PutLLong(value int64) error {
+	return Write(bs, LittleEndian, value)
 }
 
 // Float sets float got from buffer to value
