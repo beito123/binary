@@ -235,24 +235,44 @@ func (bs *Stream) PutLong(value int64) error {
 	return Write(bs, BigEndian, value)
 }
 
-// Float sets long got from buffer to value
+// Float sets float got from buffer to value
 func (bs *Stream) Float() (float32, error) {
-	return ReadEFloat(bs.Get(LongSize))
+	return ReadEFloat(bs.Get(FloatSize))
 }
 
-// PutFloat puts long from value to buffer
+// PutFloat puts float from value to buffer
 func (bs *Stream) PutFloat(value float32) error {
 	return Write(bs, BigEndian, value)
 }
 
-// Double sets long got from buffer to value
-func (bs *Stream) Double() (float64, error) {
-	return ReadEDouble(bs.Get(LongSize))
+// Float sets float got from buffer to value as LittleEndian
+func (bs *Stream) LFloat() (float32, error) {
+	return ReadELFloat(bs.Get(FloatSize))
 }
 
-// PutFloat puts long from value to buffer
+// PutFloat puts float from value to buffer as LittleEndian
+func (bs *Stream) PutLFloat(value float32) error {
+	return Write(bs, LittleEndian, value)
+}
+
+// Double sets double got from buffer to value
+func (bs *Stream) Double() (float64, error) {
+	return ReadEDouble(bs.Get(DoubleSize))
+}
+
+// PutFloat puts double from value to buffer
 func (bs *Stream) PutDouble(value float64) error {
 	return Write(bs, BigEndian, value)
+}
+
+// Double sets double got from buffer to value as LittleEndian
+func (bs *Stream) LDouble() (float64, error) {
+	return ReadELDouble(bs.Get(DoubleSize))
+}
+
+// PutFloat puts double from value to buffer as LittleEndian
+func (bs *Stream) PutLDouble(value float64) error {
+	return Write(bs, LittleEndian, value)
 }
 
 // Bool sets byte got from buffer as bool to value
