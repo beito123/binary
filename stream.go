@@ -289,3 +289,84 @@ func (bs *Stream) PutBool(value bool) error {
 
 	return bs.PutByte(val)
 }
+
+// NewOrderStream returns new Stream
+func NewOrderStream() *OrderStream {
+	return NewOrderStreamBytes([]byte{})
+}
+
+// NewOrderStreamBytes returns new Stream from bytes
+func NewOrderStreamBytes(b []byte) *OrderStream {
+	return &OrderStream{
+		Stream: &Stream{
+			buf:     b,
+			correct: true,
+		},
+	}
+}
+
+// OrderStream is a binary stream with order
+type OrderStream struct {
+	*Stream
+	Order Order
+}
+
+// Short sets short(unsign) got from buffer to value
+func (bs *OrderStream) Short() (value uint16, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// SShort sets short(sign) got from buffer to value
+func (bs *OrderStream) SShort() (value int16, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// PutShort puts short(unsign) from value to buffer
+func (bs *OrderStream) PutShort(value uint16) error {
+	return Write(bs, bs.Order, value)
+}
+
+// PutSShort puts short(sign) from value to buffer
+func (bs *OrderStream) PutSShort(value int16) error {
+	return Write(bs, bs.Order, value)
+}
+
+// Int sets int got from buffer to value
+func (bs *OrderStream) Int() (value int32, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// PutInt puts int from value to buffer
+func (bs *OrderStream) PutInt(value int32) error {
+	return Write(bs, bs.Order, value)
+}
+
+// Long sets long got from buffer to value
+func (bs *OrderStream) Long() (value int64, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// PutLong puts long from value to buffer
+func (bs *OrderStream) PutLong(value int64) error {
+	return Write(bs, bs.Order, value)
+}
+
+// Float sets float got from buffer to value
+func (bs *OrderStream) Float() (value float32, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// PutFloat puts float from value to buffer
+func (bs *OrderStream) PutFloat(value float32) error {
+	return Write(bs, bs.Order, value)
+}
+
+// Double sets double got from buffer to value
+func (bs *OrderStream) Double() (value float64, err error) {
+	return value, Read(bs, bs.Order, value)
+}
+
+// PutFloat puts double from value to buffer
+func (bs *OrderStream) PutDouble(value float64) error {
+	return Write(bs, bs.Order, value)
+}
