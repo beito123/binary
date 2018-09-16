@@ -291,17 +291,18 @@ func (bs *Stream) PutBool(value bool) error {
 }
 
 // NewOrderStream returns new Stream
-func NewOrderStream() *OrderStream {
-	return NewOrderStreamBytes([]byte{})
+func NewOrderStream(order Order) *OrderStream {
+	return NewOrderStreamBytes([]byte{}, order)
 }
 
 // NewOrderStreamBytes returns new Stream from bytes
-func NewOrderStreamBytes(b []byte) *OrderStream {
+func NewOrderStreamBytes(b []byte, order Order) *OrderStream {
 	return &OrderStream{
 		Stream: &Stream{
 			buf:     b,
 			correct: true,
 		},
+		Order: order,
 	}
 }
 
