@@ -125,7 +125,7 @@ func (bs *Stream) Write(p []byte) (n int, err error) {
  *  Long    8bytes  Big     -9223372036854775808 - 9223372036854775807
  *  String  ?bytes  Big                        ? - ?
  *  Float   4bytes  Big        IEEE-754 32bits floating-point numbers
- *  LFloat  4bytes  Little     IEEE-754 64bits floating-point numbers
+ *  LFloat  4bytes  Little     IEEE-754 32bits floating-point numbers
  *  Double  8bytes  Big        IEEE-754 64bits floating-point numbers
  *  LDouble 8bytes  Little     IEEE-754 64bits floating-point numbers
  */
