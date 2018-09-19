@@ -298,11 +298,8 @@ func NewOrderStream(order Order) *OrderStream {
 // NewOrderStreamBytes returns new Stream from bytes
 func NewOrderStreamBytes(b []byte, order Order) *OrderStream {
 	return &OrderStream{
-		Stream: &Stream{
-			buf:     b,
-			correct: true,
-		},
-		Order: order,
+		Stream: NewStreamBytes(b),
+		Order:  order,
 	}
 }
 
@@ -314,12 +311,12 @@ type OrderStream struct {
 
 // Short sets short(unsign) got from buffer to value
 func (bs *OrderStream) Short() (value uint16, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // SShort sets short(sign) got from buffer to value
 func (bs *OrderStream) SShort() (value int16, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // PutShort puts short(unsign) from value to buffer
@@ -334,7 +331,7 @@ func (bs *OrderStream) PutSShort(value int16) error {
 
 // Int sets int got from buffer to value
 func (bs *OrderStream) Int() (value int32, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // PutInt puts int from value to buffer
@@ -344,7 +341,7 @@ func (bs *OrderStream) PutInt(value int32) error {
 
 // Long sets long got from buffer to value
 func (bs *OrderStream) Long() (value int64, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // PutLong puts long from value to buffer
@@ -354,7 +351,7 @@ func (bs *OrderStream) PutLong(value int64) error {
 
 // Float sets float got from buffer to value
 func (bs *OrderStream) Float() (value float32, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // PutFloat puts float from value to buffer
@@ -364,7 +361,7 @@ func (bs *OrderStream) PutFloat(value float32) error {
 
 // Double sets double got from buffer to value
 func (bs *OrderStream) Double() (value float64, err error) {
-	return value, Read(bs, bs.Order, value)
+	return value, Read(bs, bs.Order, &value)
 }
 
 // PutFloat puts double from value to buffer
