@@ -9,7 +9,9 @@ package binary
 	http://opensource.org/licenses/mit-license.php
 */
 
-import "errors"
+import (
+	"errors"
+)
 
 var errNoEnough = errors.New("no enough buffer")
 
@@ -48,7 +50,7 @@ func (bs *Stream) Off() int {
 // Get returns n bytes from Buffer with []byte
 func (bs *Stream) Get(n int) []byte {
 	off := bs.off
-	if (n + off) >= bs.Len() {
+	if n > bs.Len() {
 		n = bs.Len()
 	}
 
