@@ -90,7 +90,7 @@ func (bs *Stream) Len() int {
 
 // Skip skips n bytes on buffer
 func (bs *Stream) Skip(n int) {
-	if (n + bs.off) >= bs.Len() {
+	if n > bs.Len() {
 		n = bs.Len()
 	}
 
