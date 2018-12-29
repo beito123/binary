@@ -144,12 +144,12 @@ func (bs *Stream) SByte() (int8, error) {
 
 // PutByte puts byte(unsign) from value to buffer
 func (bs *Stream) PutByte(value byte) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteByte(value))
 }
 
 // PutSByte puts byte(sign) from value to buffer
 func (bs *Stream) PutSByte(value int8) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteSByte(value))
 }
 
 // Short sets short(unsign) got from buffer to value
@@ -174,22 +174,22 @@ func (bs *Stream) LSShort() (int16, error) {
 
 // PutShort puts short(unsign) from value to buffer
 func (bs *Stream) PutShort(value uint16) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteUShort(value))
 }
 
 // PutSShort puts short(sign) from value to buffer
 func (bs *Stream) PutSShort(value int16) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteShort(value))
 }
 
 // PutLShort puts short(unsign) from value to buffer as LittleEndian
 func (bs *Stream) PutLShort(value uint16) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLUShort(value))
 }
 
 // PutLSShort puts short(sign) from value to buffer as LittleEndian
 func (bs *Stream) PutLSShort(value int16) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLShort(value))
 }
 
 // Int sets int got from buffer to value
@@ -199,7 +199,7 @@ func (bs *Stream) Int() (int32, error) {
 
 // PutInt puts int from value to buffer
 func (bs *Stream) PutInt(value int32) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteInt(value))
 }
 
 // Int sets int got from buffer to value as LittleEndian
@@ -209,7 +209,7 @@ func (bs *Stream) LInt() (int32, error) {
 
 // PutInt puts int from value to buffer as LittleEndian
 func (bs *Stream) PutLInt(value int32) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLInt(value))
 }
 
 // Long sets long got from buffer to value
@@ -219,7 +219,7 @@ func (bs *Stream) Long() (int64, error) {
 
 // PutLong puts long from value to buffer
 func (bs *Stream) PutLong(value int64) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteLong(value))
 }
 
 // Long sets long got from buffer to value as LittleEndian
@@ -229,7 +229,7 @@ func (bs *Stream) LLong() (int64, error) {
 
 // PutLong puts long from value to buffer as LittleEndian
 func (bs *Stream) PutLLong(value int64) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLLong(value))
 }
 
 // Float sets float got from buffer to value
@@ -239,7 +239,7 @@ func (bs *Stream) Float() (float32, error) {
 
 // PutFloat puts float from value to buffer
 func (bs *Stream) PutFloat(value float32) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteFloat(value))
 }
 
 // Float sets float got from buffer to value as LittleEndian
@@ -249,7 +249,7 @@ func (bs *Stream) LFloat() (float32, error) {
 
 // PutFloat puts float from value to buffer as LittleEndian
 func (bs *Stream) PutLFloat(value float32) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLFloat(value))
 }
 
 // Double sets double got from buffer to value
@@ -259,7 +259,7 @@ func (bs *Stream) Double() (float64, error) {
 
 // PutFloat puts double from value to buffer
 func (bs *Stream) PutDouble(value float64) error {
-	return Write(bs, BigEndian, value)
+	return bs.Put(WriteDouble(value))
 }
 
 // Double sets double got from buffer to value as LittleEndian
@@ -269,7 +269,7 @@ func (bs *Stream) LDouble() (float64, error) {
 
 // PutFloat puts double from value to buffer as LittleEndian
 func (bs *Stream) PutLDouble(value float64) error {
-	return Write(bs, LittleEndian, value)
+	return bs.Put(WriteLDouble(value))
 }
 
 // Bool sets byte got from buffer as bool to value
