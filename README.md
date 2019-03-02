@@ -9,7 +9,7 @@ This is a simple binary library written in Go.
 You can get the package with go get command.
 
 ```shell
-go get -u https://github.com/beito123/binary
+go get -u github.com/beito123/binary
 ```
 
 *-u is a option updating the package*
